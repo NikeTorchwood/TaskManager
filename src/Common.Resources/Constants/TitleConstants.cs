@@ -8,10 +8,10 @@ public static class TitleConstants
     /// <summary>
     /// Минимальная длина заголовка задачи.
     /// </summary>
-    public const int TITLE_MAX_LENGTH = 2;
+    public const int TITLE_MAX_LENGTH = 128;
 
     /// <summary>
     /// Максимальная длина заголовка задачи.
     /// </summary>
-    public const int TITLE_MIN_LENGTH = 128;
+    public const int TITLE_MIN_LENGTH = 2;
 }
