@@ -5,24 +5,24 @@ using static Common.Resources.Constants.DescriptionConstants;
 namespace Domain.ValueObjects;
 
 /// <summary>
-/// Представляет значение описания задачи с проверкой ограничений.
+/// Represents the value of the constraint-checking task description.
 /// </summary>
 /// <remarks>
-/// Класс обеспечивает валидацию строки описания задачи на минимальную и максимальную длину, а также проверку на пустое значение.
+/// The class provides validation of the task description string for the minimum and maximum length, as well as checking for an empty value.
 /// </remarks>
-/// <param name="value">Значение описания задачи.</param>
-/// <exception cref="DescriptionEmptyException">Выбрасывается, если описание задачи пусто или состоит только из пробелов.</exception>
-/// <exception cref="DescriptionMinLengthException">Выбрасывается, если длина описания задачи меньше минимально допустимого значения.</exception>
-/// <exception cref="DescriptionMaxLengthException">Выбрасывается, если длина описания задачи превышает максимально допустимое значение.</exception>
+/// <param name="value">The value of the task description.</param>
+/// <exception cref="DescriptionEmptyException">Thrown if the task description is empty or consists only of spaces.</exception>
+/// <exception cref="DescriptionMinLengthException">Thrown if the length of the task description is less than the minimum allowed value.</exception>
+/// <exception cref="DescriptionMaxLengthException">Thrown if the task description is longer than the maximum allowed value.</exception>
 public class Description(string value) : ValueObject<string>(value)
 {
     /// <summary>
-    /// Выполняет валидацию значения описания.
+    /// Performs validation of the description value.
     /// </summary>
-    /// <param name="value">Значение, которое нужно проверить.</param>
-    /// <exception cref="DescriptionEmptyException">Если значение пустое или состоит только из пробелов.</exception>
-    /// <exception cref="DescriptionMinLengthException">Если длина меньше минимально допустимого значения.</exception>
-    /// <exception cref="DescriptionMaxLengthException">Если длина больше максимально допустимого значения.</exception>
+    /// <param name="value">The value that needs to be checked.</param>
+    /// <exception cref="DescriptionEmptyException">Thrown if the value is empty or consists only of spaces.</exception>
+    /// <exception cref="DescriptionMinLengthException">Thrown if the length is less than the minimum allowed value.</exception>
+    /// <exception cref="DescriptionMaxLengthException">Thrown if the length is greater than the maximum allowed value.</exception>
     protected override void Validate(string value)
     {
         if (string.IsNullOrWhiteSpace(value))

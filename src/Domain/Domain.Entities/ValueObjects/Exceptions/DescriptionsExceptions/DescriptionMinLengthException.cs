@@ -4,10 +4,10 @@ using static Domain.Helpers.Domain.ExceptionsMessages.ValueObjectsMessages.Descr
 namespace Domain.ValueObjects.Exceptions.DescriptionsExceptions;
 
 /// <summary>
-/// Исключение, которое выбрасывается, если длина описания задачи меньше минимально разрешённого значения.
+/// An exception that is thrown if the length of the task description is less than the minimum allowed value.
 /// </summary>
-/// <param name="valueLength">Длина текущего значения описания.</param>
-/// <param name="paramName">Имя параметра, который вызвал ошибку.</param
+/// <param name="valueLength">The length of the current description value.</param>
+/// <param name="paramName">The name of the parameter that caused the error.</param
 public class DescriptionMinLengthException(int valueLength, string paramName)
     : ArgumentOutOfRangeException(
         paramName: paramName,

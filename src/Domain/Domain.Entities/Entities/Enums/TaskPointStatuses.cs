@@ -1,27 +1,27 @@
 ﻿namespace Domain.Entities.Enums;
 
 /// <summary>
-/// Статусы задачи в системе управления задачами.
+/// Task point statuses in the task management system.
 /// </summary>
 public enum TaskPointStatuses
 {
     /// <summary>
-    /// Задача была создана, но ещё не начата.
+    /// The task has been created, but not started yet.
     /// </summary>
     Created = 0,
 
     /// <summary>
-    /// Задача в процессе выполнения.
+    /// The task is in progress.
     /// </summary>
     InProgress = 1,
 
     /// <summary>
-    /// Задача была успешно завершена.
+    /// The task was completed successfully.
     /// </summary>
     Completed = 2,
 
     /// <summary>
-    /// Задача была отменена.
+    /// The task has been cancelled.
     /// </summary>
     Cancelled = 3
 }

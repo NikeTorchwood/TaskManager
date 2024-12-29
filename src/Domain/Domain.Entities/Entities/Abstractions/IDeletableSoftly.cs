@@ -1,18 +1,18 @@
 ﻿namespace Domain.Entities.Abstractions;
 
 /// <summary>
-/// Интерфейс для сущностей, поддерживающих мягкое удаление.
-/// Мягкое удаление предполагает, что объект не удаляется физически, а помечается как удалённый.
+/// Interface for entities that support soft deletion.
+/// Soft deletion assumes that the object is not physically deleted, but is marked as deleted.
 /// </summary>
 public interface IDeletableSoftly
 {
     /// <summary>
-    /// Флаг, указывающий, было ли выполнено мягкое удаление объекта.
+    /// A flag indicating whether a soft deletion of the object has been performed.
     /// </summary>
     bool IsDeleted { get; }
 
     /// <summary>
-    /// Помечает объект как удалённый.
+    /// Marks the object as deleted.
     /// </summary>
     void MarkAsDeleted();
 }

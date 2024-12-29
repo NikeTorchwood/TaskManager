@@ -4,10 +4,10 @@ using static Domain.Helpers.Domain.ExceptionsMessages.ValueObjectsMessages.Title
 namespace Domain.ValueObjects.Exceptions.TitleExceptions;
 
 /// <summary>
-/// Исключение, которое выбрасывается, если длина заголовка задачи меньше минимально разрешённого значения.
+/// An exception that is thrown if the length of the task header is less than the minimum allowed value.
 /// </summary>
-/// <param name="valueLength">Длина текущего значения заголовка задачи.</param>
-/// <param name="paramName">Имя параметра, который вызвал ошибку.</param
+/// <param name="valueLength">The length of the current issue header value.</param>
+/// <param name="paramName">The name of the parameter that caused the error.</param
 public class TitleMinLengthException(int valueLength, string paramName)
     : ArgumentOutOfRangeException(
         paramName: paramName,

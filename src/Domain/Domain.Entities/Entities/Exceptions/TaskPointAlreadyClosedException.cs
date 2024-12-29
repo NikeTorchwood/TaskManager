@@ -3,7 +3,7 @@
 namespace Domain.Entities.Exceptions;
 
 /// <summary>
-/// Исключение, которое выбрасывается, если попытаться изменить уже закрытую задачу.
+/// An exception that is thrown if you try to change an already closed task.
 /// </summary>
 public class TaskPointAlreadyClosedException()
     : InvalidOperationException(ERROR_MESSAGE_TASK_POINT_ALREADY_CLOSED);

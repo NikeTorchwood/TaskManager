@@ -3,9 +3,9 @@
 namespace Domain.Entities.Exceptions;
 
 /// <summary>
-/// Исключение, которое выбрасывается, если дедлайн задачи установлен в прошлом.
+/// An exception that is thrown if the task deadline is set in the past.
 /// </summary>
-/// <param name="paramName">Имя параметра, который вызвал ошибку.</param>   
+/// <param name="paramName">The name of the parameter that caused the error.</param>   
 public class CreatingExpiredDeadlineException(string paramName)
     : ArgumentException(
         paramName: paramName,

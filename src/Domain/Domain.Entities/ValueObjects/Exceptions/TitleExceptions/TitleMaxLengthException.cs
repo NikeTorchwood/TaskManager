@@ -4,10 +4,10 @@ using static Domain.Helpers.Domain.ExceptionsMessages.ValueObjectsMessages.Title
 namespace Domain.ValueObjects.Exceptions.TitleExceptions;
 
 /// <summary>
-/// Исключение, которое выбрасывается, если длина заголовка задачи превышает максимальное разрешённое значение.
+/// An exception that is thrown if the length of the task header exceeds the maximum allowed value.
 /// </summary>
-/// <param name="valueLength">Длина текущего значения заголовка задачи.</param>
-/// <param name="paramName">Имя параметра, который вызвал ошибку.</param>
+/// <param name="valueLength">The length of the current issue header value.</param>
+/// <param name="paramName">The name of the parameter that caused the error.</param>
 public class TitleMaxLengthException(int valueLength, string paramName)
     : ArgumentOutOfRangeException(
     paramName: paramName,

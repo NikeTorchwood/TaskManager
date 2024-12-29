@@ -1,17 +1,17 @@
 ﻿namespace Common.Resources.Constants;
 
 /// <summary>
-/// Константы, связанные с ограничениями для описания задачи.
+/// Constants associated with constraints for the task description.
 /// </summary>
 public class DescriptionConstants
 {
     /// <summary>
-    /// Минимальная длина описания задачи.
+    /// The minimum length of the task description.
     /// </summary>
     public const int DESCRIPTION_MIN_LENGTH = 5;
 
     /// <summary>
-    /// Максимальная длина описания задачи.
+    /// The maximum length of the task description.
     /// </summary>
     public const int DESCRIPTION_MAX_LENGTH = 256;
 }

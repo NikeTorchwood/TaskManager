@@ -1,20 +1,20 @@
 ﻿namespace Domain.ValueObjects.BaseValueObjects;
 
 /// <summary>
-/// Базовый класс объекта значения
+/// The base class of the value object.
 /// </summary>
-/// <typeparam name="T">Тип-обобщение базового элемента</typeparam>
+/// <typeparam name="T">Base element.</typeparam>
 public abstract class ValueObject<T>
 {
     /// <summary>
-    /// Значение базового элемента
+    /// Value of the base element
     /// </summary>
     public T Value { get; }
 
     /// <summary>
-    /// Базовый элемент системы
+    /// The basic element of the system
     /// </summary>
-    /// <param name="value">Значение, которое хранится в элементе и проходит валидацию</param>
+    /// <param name="value">The value of the value object.</param>
     protected ValueObject(T value)
     {
         Validate(value);
@@ -22,8 +22,8 @@ public abstract class ValueObject<T>
     }
 
     /// <summary>
-    /// Валидирует значение переданное в конструктор
+    /// Validates the value passed to the constructor.
     /// </summary>
-    /// <param name="value">Значение, которое хранится в элементе и проходит валидацию</param>
+    /// <param name="value">The checked value is value object.</param>
     protected abstract void Validate(T value);
 }

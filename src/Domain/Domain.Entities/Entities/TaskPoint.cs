@@ -6,60 +6,60 @@ using Domain.ValueObjects;
 namespace Domain.Entities;
 
 /// <summary>
-/// Представляет задачу в системе с точкой выполнения. Хранит информацию о заголовке, описании, статусе,
-/// времени создания, дедлайне и времени начала/закрытия.
+/// Represents a task in the system with a point of completion. Stores information about the title, description, status,
+/// creation time, deadline, and start time/closures.
 /// </summary>
 public class TaskPoint
     : IEntity<Guid>,
     IDeletableSoftly
 {
     /// <summary>
-    /// Уникальный идентификатор задачи.
+    /// The unique identifier of the issue.
     /// </summary>
     public Guid Id { get; }
 
     /// <summary>
-    /// Заголовок задачи.
+    /// Task title.
     /// </summary>
     public Title Title { get; private set; }
 
     /// <summary>
-    /// Описание задачи.
+    /// Task description.
     /// </summary>
     public Description Description { get; private set; }
 
     /// <summary>
-    /// Текущий статус задачи.
+    /// The current status of the issue.
     /// </summary>
     public TaskPointStatuses Status { get; private set; }
 
     /// <summary>
-    /// Флаг, показывающий, была ли задача удалена.
+    /// A flag indicating whether the task has been deleted.
     /// </summary>
     public bool IsDeleted { get; private set; }
 
     /// <summary>
-    /// Дата и время создания задачи.
+    /// Date and time when the task was created.
     /// </summary>
     public DateTime CreatedAt { get; private set; }
 
     /// <summary>
-    /// Дата и время дедлайна задачи.
+    /// Date and time of the task deadline.
     /// </summary>
     public DateTime Deadline { get; private set; }
 
     /// <summary>
-    /// Дата и время начала выполнения задачи.
+    /// Date and time of the start of the task.
     /// </summary>
     public DateTime? StartedAt { get; private set; }
 
     /// <summary>
-    /// Дата и время завершения задачи.
+    /// Date and time of completion of the task.
     /// </summary>
     public DateTime? ClosedAt { get; private set; }
 
     /// <summary>
-    /// Защищённый конструктор для использования в EF.
+    /// A secure constructor for use in EF.
     /// </summary>
     protected TaskPoint()
     {
@@ -67,14 +67,14 @@ public class TaskPoint
     }
 
     /// <summary>
-    /// Инициализирует новый экземпляр задачи.
+    /// Initializes a new instance of the task.
     /// </summary>
-    /// <param name="title">Заголовок задачи.</param>
-    /// <param name="description">Описание задачи.</param>
-    /// <param name="deadline">Дедлайн задачи.</param>
-    /// <param name="isStarted">Флаг, указывающий, была ли задача уже начата. По умолчанию false.</param>
-    /// <exception cref="ArgumentNullException">Если заголовок или описание равны null.</exception>
-    /// <exception cref="CreatingExpiredDeadlineException">Если дедлайн задачи раньше текущего времени.</exception>
+    /// <param name="title">The task title.</param>
+    /// <param name="description">Task description.</param>
+    /// <param name="deadline">The deadline for the task.</param>
+    /// <param name="isStarted">A flag indicating whether the task has already been started. By default, false.</param>
+    /// <exception cref="ArgumentNullException">Thrown if the title or description is null.</exception>
+    /// <exception cref="CreatingExpiredDeadlineException">Thrown if the task deadline is earlier than the current time.</exception>
     public TaskPoint(Title title, Description description, DateTime deadline, bool isStarted = false)
     {
         Id = Guid.NewGuid();
@@ -96,11 +96,11 @@ public class TaskPoint
     }
 
     /// <summary>
-    /// Изменяет заголовок задачи. Изменение возможно только для незакрытых задач.
+    /// Changes the task title. The change is only possible for unclosed tasks.
     /// </summary>
-    /// <param name="newTitle">Новый заголовок задачи.</param>
-    /// <exception cref="ArgumentNullException">Если новый заголовок равен null.</exception>
-    /// <exception cref="TaskPointEditingForbiddenException">Если задача уже завершена или отменена.</exception>
+    /// <param name="newTitle">New task title.</param>
+    /// <exception cref="ArgumentNullException">Thrown if the new title is null.</exception>
+    /// <exception cref="TaskPointEditingForbiddenException">Thrown if the task has already been completed or cancelled.</exception>
     public void ChangeTitle(Title newTitle)
     {
         if (ClosedAt.HasValue)
@@ -110,11 +110,11 @@ public class TaskPoint
     }
 
     /// <summary>
-    /// Изменяет описание задачи. Изменение возможно только для незакрытых задач.
+    /// Modifies the task description. The change is only possible for unclosed tasks.
     /// </summary>
-    /// <param name="newDescription">Новое описание задачи.</param>
-    /// <exception cref="ArgumentNullException">Если новое описание равно null.</exception>
-    /// <exception cref="TaskPointEditingForbiddenException">Если задача уже завершена или отменена.</exception>
+    /// <param name="newDescription">New task description.</param>
+    /// <exception cref="ArgumentNullException">Thrown if the new description is null.</exception>
+    /// <exception cref="TaskPointEditingForbiddenException">Thrown if the task has already been completed or cancelled.</exception>
     public void ChangeDescription(Description newDescription)
     {
         if (ClosedAt.HasValue)
@@ -124,11 +124,11 @@ public class TaskPoint
     }
 
     /// <summary>
-    /// Изменяет дедлайн задачи. Изменение возможно только для незакрытых задач и если новый дедлайн не истёк.
+    /// Changes the task deadline. The change is only possible for unclosed tasks and if the new deadline has not expired.
     /// </summary>
-    /// <param name="newDeadline">Новый дедлайн задачи.</param>
-    /// <exception cref="CreatingExpiredDeadlineException">Если новый дедлайн раньше текущего времени.</exception>
-    /// <exception cref="TaskPointEditingForbiddenException">Если задача уже завершена или отменена.</exception>
+    /// <param name="newDeadline">New task deadline.</param>
+    /// <exception cref="CreatingExpiredDeadlineException">Thrown if the new deadline is earlier than the current time.</exception>
+    /// <exception cref="TaskPointEditingForbiddenException">Thrown if the task has already been completed or cancelled.</exception>
     public void ChangeDeadline(DateTime newDeadline)
     {
         if (ClosedAt.HasValue)
@@ -139,9 +139,9 @@ public class TaskPoint
     }
 
     /// <summary>
-    /// Запускает задачу. Статус задачи изменяется на "В процессе".
+    /// Starts the task. The task status changes to "In progress".
     /// </summary>
-    /// <exception cref="TaskPointAlreadyClosedException">Если задача уже завершена или отменена.</exception>
+    /// <exception cref="TaskPointAlreadyClosedException">Thrown if the task has already been completed or cancelled.</exception>
     public void StartTaskPoint()
     {
         if (ClosedAt.HasValue)
@@ -153,9 +153,9 @@ public class TaskPoint
     }
 
     /// <summary>
-    /// Отменяет задачу. Статус задачи изменяется на "Отменено", и задача считается закрытой.
+    /// Cancels the task. The task status changes to "Canceled" and the task is considered closed.
     /// </summary>
-    /// <exception cref="TaskPointAlreadyClosedException">Если задача уже завершена или отменена.</exception>
+    /// <exception cref="TaskPointAlreadyClosedException">Thrown if the task has already been completed or cancelled.</exception>
     public void CancelTaskPoint()
     {
         if (ClosedAt.HasValue)
@@ -166,10 +166,10 @@ public class TaskPoint
     }
 
     /// <summary>
-    /// Завершает задачу. Статус задачи изменяется на "Завершено", и задача считается закрытой.
+    /// Completes the task. The task status changes to "Completed" and the task is considered closed.
     /// </summary>
-    /// <exception cref="TaskPointNotStartedException">Если задача не была начата.</exception>
-    /// <exception cref="TaskPointAlreadyClosedException">Если задача уже завершена или отменена.</exception>
+    /// <exception cref="TaskPointNotStartedException">Thrown if the task has not been started.</exception>
+    /// <exception cref="TaskPointAlreadyClosedException">Thrown if the task has already been completed or cancelled.</exception>
     public void CompleteTaskPoint()
     {
         if (!StartedAt.HasValue)
@@ -182,7 +182,7 @@ public class TaskPoint
     }
 
     /// <summary>
-    /// Помечает задачу как удалённую (мягкое удаление). Не влияет на статус задачи.
+    /// Marks the task as deleted (soft deletion). It does not affect the issue status.
     /// </summary>
     public void MarkAsDeleted() => IsDeleted = true;
 }

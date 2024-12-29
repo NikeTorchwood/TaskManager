@@ -3,9 +3,9 @@
 namespace Domain.ValueObjects.Exceptions.DescriptionsExceptions;
 
 /// <summary>
-/// Исключение, которое выбрасывается, если описание задачи пусто (null или пустая строка).
+/// An exception that is thrown if the task description is empty (null or an empty string).
 /// </summary>
-/// <param name="paramName">Имя параметра, который вызвал ошибку.</param>
+/// <param name="paramName">The name of the parameter that caused the error.</param>
 public class DescriptionEmptyException(string paramName)
     : ArgumentNullException(
     paramName: paramName,

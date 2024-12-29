@@ -1,14 +1,14 @@
 ﻿namespace Domain.Entities.Abstractions;
 
 /// <summary>
-/// Общий интерфейс для сущностей с уникальным идентификатором.
+/// A common interface for entities with a unique identifier.
 /// </summary>
-/// <typeparam name="TId">Тип идентификатора сущности. Должен быть значимым типом.</typeparam>
+/// <typeparam name="TId">The type of the entity ID. Must be a significant type.</typeparam>
 public interface IEntity<out TId>
     where TId : struct
 {
     /// <summary>
-    /// Уникальный идентификатор сущности.
+    /// The unique identifier of the entity.
     /// </summary>
     TId Id { get; }
 }

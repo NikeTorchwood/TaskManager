@@ -5,25 +5,25 @@ using static Common.Resources.Constants.TitleConstants;
 namespace Domain.ValueObjects;
 
 /// <summary>
-/// Представляет значение заголовка задачи с проверкой ограничений.
+/// Represents the value of the constraint-checking task header.
 /// </summary>
 /// <remarks>
-/// Класс обеспечивает валидацию строки заголовка задачи на минимальную и максимальную длину, а также проверку на пустое значение.
+/// The class provides validation of the task title bar for the minimum and maximum length, as well as checking for an empty value.
 /// </remarks>
-/// <param name="value">Значение заголовка задачи.</param>
-/// <exception cref="TitleEmptyException">Выбрасывается, если заголовок задачи пустой или состоит только из пробелов.</exception>
-/// <exception cref="TitleMinLengthException">Выбрасывается, если длина заголовка задачи меньше минимально допустимого значения.</exception>
-/// <exception cref="TitleMaxLengthException">Выбрасывается, если длина заголовка задачи превышает максимально допустимое значение.</exception>
+/// <param name="value">The value of the task title.</param>
+/// <exception cref="TitleEmptyException">Thrown if the task title is empty or consists only of spaces.</exception>
+/// <exception cref="TitleMinLengthException">Thrown if the length of the task header is less than the minimum allowed value.</exception>
+/// <exception cref="TitleMaxLengthException">Thrown if the length of the task header exceeds the maximum allowed value.</exception>
 public class Title(string value) : ValueObject<string>(value)
 {
 
     /// <summary>
-    /// Выполняет валидацию значения заголовка задачи.
+    /// Validates the value of the task header.
     /// </summary>
-    /// <param name="value">Значение, которое нужно проверить.</param>
-    /// <exception cref="TitleEmptyException">Если значение пустое или состоит только из пробелов.</exception>
-    /// <exception cref="TitleMinLengthException">Если длина меньше минимально допустимого значения.</exception>
-    /// <exception cref="TitleMaxLengthException">Если длина больше максимально допустимого значения.</exception>
+    /// <param name="value">The value to check.</param>
+    /// <exception cref="TitleEmptyException">Thrown if the value is empty or consists only of spaces.</exception>
+    /// <exception cref="TitleMinLengthException">Thrown if the length is less than the minimum allowed value.</exception>
+    /// <exception cref="TitleMaxLengthException">Thrown if the length is greater than the maximum allowed value.</exception>
     protected override void Validate(string value)
     {
         if (string.IsNullOrWhiteSpace(value))

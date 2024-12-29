@@ -3,7 +3,7 @@
 namespace Domain.Entities.Exceptions;
 
 /// <summary>
-/// Исключение, которое выбрасывается, если попытаться завершить не стартовавшую задачу.
+/// An exception that is thrown if you try to complete a failed task.
 /// </summary>
 internal class TaskPointNotStartedException()
     : InvalidOperationException(ERROR_MESSAGE_TASK_POINT_NOT_STARTED);

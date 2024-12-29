@@ -4,10 +4,10 @@ using static Domain.Helpers.Domain.ExceptionsMessages.ValueObjectsMessages.Descr
 namespace Domain.ValueObjects.Exceptions.DescriptionsExceptions;
 
 /// <summary>
-/// Исключение, которое выбрасывается, если длина описания задачи превышает максимальное разрешённое значение.
+/// An exception that is thrown if the length of the task description exceeds the maximum allowed value.
 /// </summary>
-/// <param name="valueLength">Длина текущего значения описания задачи.</param>
-/// <param name="paramName">Имя параметра, который вызвал ошибку.</param>
+/// <param name="valueLength">The length of the current value of the task description.</param>
+/// <param name="paramName">The name of the parameter that caused the error.</param>
 public class DescriptionMaxLengthException(int valueLength, string paramName)
     : ArgumentOutOfRangeException(
         paramName: paramName,
