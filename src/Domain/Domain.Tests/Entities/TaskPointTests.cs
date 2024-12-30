@@ -10,16 +10,14 @@ namespace Domain.Tests.Entities;
 public class TaskPointTests
 {
     private readonly Title _defaultTitle;
-    private readonly Description _defaultDescription;
     private readonly Title? _nullableTitle;
+    private readonly Description _defaultDescription;
     private readonly Description? _nullableDescription;
     private readonly DateTime _correctDeadline;
     private readonly DateTime _incorrectDeadline;
 
-    // Конструктор тестового класса
     public TaskPointTests()
     {
-        Debug.WriteLine("Test Initialize.");
         _defaultTitle = new Title("Default Task");
         _defaultDescription = new Description("Default Description");
         _nullableTitle = null;
@@ -59,6 +57,7 @@ public class TaskPointTests
         var expectedDeadline = _correctDeadline;
 
         var expectedStatus = TaskPointStatuses.InProgress;
+
         // Act
         var actual = new TaskPoint(expectedTitle, expectedDescription, expectedDeadline, true);
 
@@ -77,8 +76,8 @@ public class TaskPointTests
         // Arrange
         var expectedTitle = _nullableTitle;
         var expectedDescription = _defaultDescription;
-        var expectedDeadline = _correctDeadline; 
-        
+        var expectedDeadline = _correctDeadline;
+
         // Act
         var actual = () => new TaskPoint(expectedTitle, expectedDescription, expectedDeadline);
 
@@ -220,6 +219,200 @@ public class TaskPointTests
         // Act
         taskPoint.ChangeDeadline(expected);
         var actual = taskPoint.Deadline;
+
+        // Assert
+        Assert.Equal(expected, actual);
+    }
+
+    [Fact]
+    public void ChangeDeadline_WhenTaskIsClosedAndNewDeadlineIsValid_ShouldThrowTaskPointEditingForbiddenException()
+    {
+        // Arrange
+        var taskPoint = new TaskPoint(_defaultTitle, _defaultDescription, _correctDeadline);
+        var expected = _correctDeadline.AddDays(1);
+        typeof(TaskPoint)
+            .GetProperty(nameof(taskPoint.ClosedAt))
+            ?.SetValue(taskPoint, DateTime.UtcNow);
+
+        // Act
+        var actual = () => taskPoint.ChangeDeadline(expected);
+
+        // Assert
+        Assert.Throws<TaskPointEditingForbiddenException>(actual);
+    }
+
+    [Fact]
+    public void ChangeDeadline_WhenTaskIsNotClosedAndNewDeadlineIsNotValid_ShouldThrowTaskPointEditingForbiddenException()
+    {
+        // Arrange
+        var taskPoint = new TaskPoint(_defaultTitle, _defaultDescription, _correctDeadline);
+        var expected = _correctDeadline.AddDays(-2);
+
+        // Act
+        var actual = () => taskPoint.ChangeDeadline(expected);
+
+        // Assert
+        Assert.Throws<CreatingExpiredDeadlineException>(actual);
+    }
+
+    [Fact]
+    public void StartTask_WhenTaskPointIsNotClosedAndIsNotStarted_ShouldUpdateCratedAtAndStatus()
+    {
+        // Arrange
+        var taskPoint = new TaskPoint(_defaultTitle, _defaultDescription, _correctDeadline);
+        var expectedStatus = TaskPointStatuses.InProgress;
+
+        // Act
+        taskPoint.StartTask();
+        var actualStartedAt = taskPoint.StartedAt;
+        var actualStatus = taskPoint.Status;
+
+        // Assert
+        Assert.NotNull(actualStartedAt);
+        Assert.Equal(expectedStatus, actualStatus);
+    }
+
+    [Fact]
+    public void StartTask_WhenTaskPointIsNotClosedAndIsStarted_ShouldCreatedAtIsNotChanged()
+    {
+        // Arrange
+        var taskPoint = new TaskPoint(_defaultTitle, _defaultDescription, _correctDeadline, true);
+        var expectedStartedAt = taskPoint.StartedAt;
+        var expectedStatus = TaskPointStatuses.InProgress;
+
+        //Act
+        taskPoint.StartTask();
+        var actualStartedAt = taskPoint.StartedAt;
+        var actualStatus = taskPoint.Status;
+
+        // Assert
+        Assert.NotNull(actualStartedAt);
+        Assert.Equal(expectedStatus, actualStatus);
+        Assert.Equal(expectedStartedAt, actualStartedAt);
+    }
+
+    [Fact]
+    public void StartTask_WhenTaskPointIsClosed_ShouldThrowTaskPointAlreadyClosedException()
+    {
+        // Arrange
+        var taskPoint = new TaskPoint(_defaultTitle, _defaultDescription, _correctDeadline, true);
+        typeof(TaskPoint)
+            .GetProperty(nameof(taskPoint.ClosedAt))
+            ?.SetValue(taskPoint, DateTime.UtcNow);
+
+        // Act
+        var actual = () => taskPoint.StartTask();
+
+        // Assert
+        Assert.Throws<TaskPointAlreadyClosedException>(actual);
+    }
+
+    [Fact]
+    public void CancelTask_WhenTaskPointIsNotClosedAndTaskIsNotStarted_ShouldUpdateClosedAtAndStatus()
+    {
+        // Arrange
+        var taskPoint = new TaskPoint(_defaultTitle, _defaultDescription, _correctDeadline);
+        var expectedStatus = TaskPointStatuses.Cancelled;
+
+        // Act
+        taskPoint.CancelTask();
+        var actualClosedAt = taskPoint.ClosedAt;
+        var actualStatus = taskPoint.Status;
+
+        // Assert
+        Assert.NotNull(actualClosedAt);
+        Assert.Equal(expectedStatus, actualStatus);
+    }
+
+    [Fact]
+    public void CancelTask_WhenTaskPointIsNotClosedAndTaskIsStarted_ShouldUpdateClosedAtAndStatus()
+    {
+        // Arrange
+        var taskPoint = new TaskPoint(_defaultTitle, _defaultDescription, _correctDeadline, true);
+        var expectedStatus = TaskPointStatuses.Cancelled;
+
+        // Act
+        taskPoint.CancelTask();
+        var actualClosedAt = taskPoint.ClosedAt;
+        var actualStatus = taskPoint.Status;
+
+        // Assert
+        Assert.NotNull(actualClosedAt);
+        Assert.Equal(expectedStatus, actualStatus);
+    }
+
+    [Fact]
+    public void CancelTask_WhenTaskPointIsClosed_ShouldThrowTaskPointAlreadyClosedException()
+    {
+        // Arrange
+        var taskPoint = new TaskPoint(_defaultTitle, _defaultDescription, _correctDeadline);
+        typeof(TaskPoint)
+            .GetProperty(nameof(taskPoint.ClosedAt))
+            ?.SetValue(taskPoint, DateTime.UtcNow);
+
+        // Act
+        var actual = () => taskPoint.CancelTask();
+        
+        // Assert
+        Assert.Throws<TaskPointAlreadyClosedException>(actual);
+    }
+
+    [Fact]
+    public void CompleteTask_WhenTaskPointIsStartedAndNotClosed_ShouldUpdateClosedAtAndStatus()
+    {
+        // Arrange
+        var taskPoint = new TaskPoint(_defaultTitle, _defaultDescription, _correctDeadline, true);
+        var expectedStatus = TaskPointStatuses.Completed;
+        
+        // Act
+        taskPoint.CompleteTask();
+        var actualStatus = taskPoint.Status;
+        var actualClosedAt = taskPoint.ClosedAt;
+
+        // Assert
+        Assert.NotNull(actualClosedAt);
+        Assert.Equal(expectedStatus, actualStatus);
+    }
+
+    [Fact]
+    public void CompleteTask_WhenTaskPointIsNotStartedAndNotClosed_ShouldThrowTaskPointNotStartedException()
+    {
+        // Arrange
+        var taskPoint = new TaskPoint(_defaultTitle, _defaultDescription, _correctDeadline);
+
+        // Act
+        var actual = ()=> taskPoint.CompleteTask();
+
+        // Assert
+        Assert.Throws<TaskPointNotStartedException>(actual);
+    }
+
+    [Fact]
+    public void CompleteTask_WhenTaskPointIsStartedAndClosed_ShouldThrowTaskPointAlreadyClosedException()
+    {
+        // Arrange
+        var taskPoint = new TaskPoint(_defaultTitle, _defaultDescription, _correctDeadline, true);
+        typeof(TaskPoint)
+            .GetProperty(nameof(taskPoint.ClosedAt))
+            ?.SetValue(taskPoint, DateTime.UtcNow);
+
+        // Act
+        var actual = () => taskPoint.CompleteTask();
+
+        // Assert
+        Assert.Throws<TaskPointAlreadyClosedException>(actual);
+    }
+
+    [Fact]
+    public void MarkAsDeleted_WhenIsDeletedFalse_ShouldUpdatedIsDeleted()
+    {
+        // Arrange
+        var taskPoint = new TaskPoint(_defaultTitle, _defaultDescription, _correctDeadline);
+        var expected = true;
+
+        // Act
+        taskPoint.MarkAsDeleted();
+        var actual = taskPoint.IsDeleted;
 
         // Assert
         Assert.Equal(expected, actual);

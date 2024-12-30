@@ -142,7 +142,7 @@ public class TaskPoint
     /// Starts the task. The task status changes to "In progress".
     /// </summary>
     /// <exception cref="TaskPointAlreadyClosedException">Thrown if the task has already been completed or cancelled.</exception>
-    public void StartTaskPoint()
+    public void StartTask()
     {
         if (ClosedAt.HasValue)
             throw new TaskPointAlreadyClosedException();
@@ -156,7 +156,7 @@ public class TaskPoint
     /// Cancels the task. The task status changes to "Canceled" and the task is considered closed.
     /// </summary>
     /// <exception cref="TaskPointAlreadyClosedException">Thrown if the task has already been completed or cancelled.</exception>
-    public void CancelTaskPoint()
+    public void CancelTask()
     {
         if (ClosedAt.HasValue)
             throw new TaskPointAlreadyClosedException();
@@ -170,7 +170,7 @@ public class TaskPoint
     /// </summary>
     /// <exception cref="TaskPointNotStartedException">Thrown if the task has not been started.</exception>
     /// <exception cref="TaskPointAlreadyClosedException">Thrown if the task has already been completed or cancelled.</exception>
-    public void CompleteTaskPoint()
+    public void CompleteTask()
     {
         if (!StartedAt.HasValue)
             throw new TaskPointNotStartedException();
