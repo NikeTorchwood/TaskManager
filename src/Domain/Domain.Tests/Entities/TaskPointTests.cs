@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using Domain.Entities;
+﻿using Domain.Entities;
 using Domain.Entities.Enums;
 using Domain.Entities.Exceptions;
 using Domain.ValueObjects;
@@ -352,7 +351,7 @@ public class TaskPointTests
 
         // Act
         var actual = () => taskPoint.CancelTask();
-        
+
         // Assert
         Assert.Throws<TaskPointAlreadyClosedException>(actual);
     }
@@ -363,7 +362,7 @@ public class TaskPointTests
         // Arrange
         var taskPoint = new TaskPoint(_defaultTitle, _defaultDescription, _correctDeadline, true);
         var expectedStatus = TaskPointStatuses.Completed;
-        
+
         // Act
         taskPoint.CompleteTask();
         var actualStatus = taskPoint.Status;
@@ -381,7 +380,7 @@ public class TaskPointTests
         var taskPoint = new TaskPoint(_defaultTitle, _defaultDescription, _correctDeadline);
 
         // Act
-        var actual = ()=> taskPoint.CompleteTask();
+        var actual = () => taskPoint.CompleteTask();
 
         // Assert
         Assert.Throws<TaskPointNotStartedException>(actual);

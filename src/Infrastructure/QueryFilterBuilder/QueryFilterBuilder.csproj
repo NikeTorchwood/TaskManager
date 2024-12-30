@@ -7,11 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\Application\Repositories.Abstractions\Repositories.Abstractions.csproj" />
+    <ProjectReference Include="..\..\Application\Services.Contracts\Services.Contracts.csproj" />
   </ItemGroup>
 
 </Project>
