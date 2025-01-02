@@ -1,21 +1,29 @@
-﻿using Domain.Entities;
+﻿using AutoMapper;
+using Domain.Entities;
 using Domain.ValueObjects;
 using MediatR;
 using Repositories.Abstractions;
 using Services.Contracts.Commands;
 using Services.Contracts.Models;
+using static Common.Resources.ResponseErrorMessages.ErrorMessages;
 
 namespace Services.Implementations.Handlers.CommandHandlers;
 
 internal class CreateTaskPointCommandHandler(
     IWriteTaskPointsRepository repository,
     IMapper mapper)
-    : IRequestHandler<CreateTaskPointCommand, ReadModel>
+    : IRequestHandler<CreateTaskPointCommand, ResultModel<ReadModel>>
 {
-    public async Task<ReadModel> Handle(
+    public async Task<ResultModel<ReadModel>> Handle(
         CreateTaskPointCommand request,
         CancellationToken ct)
     {
+        if (request == null ||
+            string.IsNullOrWhiteSpace(request.Title) ||
+            string.IsNullOrWhiteSpace(request.Description) ||
+            request.Deadline <= DateTime.UtcNow)
+            return ResultModel<ReadModel>.FailureResult(ERROR_MESSAGE_INVALID_DATA);
+
         var title = new Title(request.Title);
         var description = new Description(request.Description);
 
@@ -23,6 +31,8 @@ internal class CreateTaskPointCommandHandler(
 
         var createdTaskPoint = await repository.AddAsync(taskPoint, ct);
 
-        return mapper.Map<ReadModel>(createdTaskPoint);
+        var result = mapper.Map<ReadModel>(createdTaskPoint);
+
+        return ResultModel<ReadModel>.SuccessResult(result);
     }
 }

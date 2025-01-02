@@ -1,5 +1,4 @@
 ﻿using Domain.Entities;
-using Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using static Common.Resources.Constants.DescriptionConstants;
@@ -15,21 +14,21 @@ internal class TaskPointConfiguration : IEntityTypeConfiguration<TaskPoint>
 
         builder.HasKey(tp => tp.Id);
 
-        builder.Property(tp => tp.Title)
-            .HasConversion(
-                title => title.Value,
-                value => new Title(value))
-            .HasColumnName("Title")
-            .IsRequired()
-            .HasMaxLength(TITLE_MAX_LENGTH);
+        builder.OwnsOne(tp => tp.Title, title =>
+        {
+            title.Property(t => t.Value)
+                .HasColumnName("Title")
+                .IsRequired()
+                .HasMaxLength(TITLE_MAX_LENGTH);
+        });
 
-        builder.Property(tp => tp.Description)
-            .HasConversion(
-                description => description.Value,
-                value => new Description(value))
-            .HasColumnName("Description")
-            .IsRequired()
-            .HasMaxLength(DESCRIPTION_MAX_LENGTH);
+        builder.OwnsOne(tp => tp.Description, description =>
+        {
+            description.Property(d => d.Value)
+                .HasColumnName("Description")
+                .IsRequired()
+                .HasMaxLength(DESCRIPTION_MAX_LENGTH);
+        });
 
         builder.Property(tp => tp.Status)
             .HasConversion<string>()
@@ -42,7 +41,9 @@ internal class TaskPointConfiguration : IEntityTypeConfiguration<TaskPoint>
             .IsRequired();
 
         builder.Property(tp => tp.StartedAt);
+
         builder.Property(tp => tp.ClosedAt);
+
         builder.Property(tp => tp.IsDeleted)
             .HasDefaultValue(false);
     }

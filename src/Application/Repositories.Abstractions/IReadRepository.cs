@@ -2,10 +2,10 @@
 
 namespace Repositories.Abstractions;
 
-public interface IReadRepository<TEntity, TId>
+public interface IReadRepository<TEntity, in TId>
     where TEntity : IEntity<TId>
     where TId : struct
 {
     public Task<IQueryable<TEntity>> GetAllAsync(CancellationToken ct);
-    public Task<TEntity> GetByIdAsync(TId id, CancellationToken ct);
+    public Task<TEntity?> GetByIdAsync(TId id, CancellationToken ct);
 }

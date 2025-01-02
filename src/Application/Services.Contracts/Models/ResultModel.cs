@@ -6,18 +6,16 @@ public class ResultModel<T>
     public T Value { get; }
     public string Error { get; }
 
-    private ResultModel(T value)
+    private ResultModel(bool success, string? error = null, T? value = default)
     {
-        Success = true;
+        Success = success;
+        Error = error;
         Value = value;
     }
 
-    private ResultModel(string error)
-    {
-        Success = false;
-        Error = error;
-    }
+    public static ResultModel<T> SuccessResult(T? value)
+        => new(true, value: value);
 
-    public static ResultModel<T> SuccessResult(T value) => new ResultModel<T>(value);
-    public static ResultModel<T> FailureResult(string error) => new ResultModel<T>(error);
+    public static ResultModel<T> FailureResult(string error)
+        => new(false, error: error);
 }

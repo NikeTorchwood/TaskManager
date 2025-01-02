@@ -11,4 +11,4 @@ namespace Domain.ValueObjects.Exceptions.DescriptionsExceptions;
 public class DescriptionMinLengthException(int valueLength, string paramName)
     : ArgumentOutOfRangeException(
         paramName: paramName,
-        string.Format(ERROR_MESSAGE_DESCRIPTION_LONGER_MIN_LENGTH, DESCRIPTION_MIN_LENGTH, valueLength));
+        string.Format(ERROR_MESSAGE_DESCRIPTION_SHORTER_MIN_LENGTH, DESCRIPTION_MIN_LENGTH, valueLength));

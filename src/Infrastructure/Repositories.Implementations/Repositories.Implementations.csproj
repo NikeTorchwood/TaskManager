@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Application\Repositories.Abstractions\Repositories.Abstractions.csproj" />
+    <ProjectReference Include="..\EntityFramework\EntityFramework.csproj" />
   </ItemGroup>
 
 </Project>

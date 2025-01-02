@@ -7,4 +7,4 @@ public record CreateTaskPointCommand(
     string Title,
     string Description,
     DateTime Deadline,
-    bool IsStarted) : IRequest<ReadModel>;
+    bool IsStarted) : IRequest<ResultModel<ReadModel>>;

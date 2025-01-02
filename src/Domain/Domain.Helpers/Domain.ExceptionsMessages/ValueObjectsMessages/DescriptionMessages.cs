@@ -14,7 +14,7 @@ public class DescriptionMessages
     /// <summary>
     /// Error message if the description length is less than the minimum allowed value.
     /// </summary>
-    public const string ERROR_MESSAGE_DESCRIPTION_LONGER_MIN_LENGTH =
+    public const string ERROR_MESSAGE_DESCRIPTION_SHORTER_MIN_LENGTH =
         "The task description cannot be shorter than the minimum allowed value. Minimum value - {0}, length value - {1}";
 
     /// <summary>

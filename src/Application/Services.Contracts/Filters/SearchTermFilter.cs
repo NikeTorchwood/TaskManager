@@ -1,11 +1,13 @@
-﻿using Domain.Entities;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
+using Domain.Entities;
 
 namespace Services.Contracts.Filters;
 
-internal class SearchTermFilter(string searchTerm) : IFilter<TaskPoint>
+public record SearchTermFilter(string SearchTerm) : IFilter<TaskPoint>
 {
     public Expression<Func<TaskPoint, bool>> Apply()
-        => x => x.Description.ToString().Contains(searchTerm) ||
-                x.Title.ToString().Contains(searchTerm);
+        => x => (x.Description != null && x.Description.Value != null &&
+                 x.Description.Value.Contains(SearchTerm)) ||
+                (x.Title != null && x.Title.Value != null &&
+                 x.Title.Value.Contains(SearchTerm));
 }

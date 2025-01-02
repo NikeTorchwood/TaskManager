@@ -1,5 +1,14 @@
-﻿namespace Services.Contracts.Models;
+﻿using Domain.Entities.Enums;
 
-public class ReadModel
-{
-}
+namespace Services.Contracts.Models;
+
+public record ReadModel(
+    Guid Id,
+    string Title,
+    string Description,
+    TaskPointStatuses Status,
+    bool IsDeleted,
+    DateTime CreatedAt,
+    DateTime Deadline,
+    DateTime? StartedAt,
+    DateTime? ClosedAt);

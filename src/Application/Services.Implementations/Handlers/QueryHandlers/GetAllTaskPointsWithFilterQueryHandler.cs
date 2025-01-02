@@ -1,6 +1,5 @@
-﻿using Domain.Entities;
+﻿using AutoMapper;
 using MediatR;
-using QueryFilterBuilder;
 using Repositories.Abstractions;
 using Services.Contracts.Models;
 using Services.Contracts.Queries;
@@ -17,15 +16,8 @@ internal class GetAllTaskPointsWithFilterQueryHandler(
         CancellationToken ct)
     {
         var query = await taskPointsRepository.GetAllAsync(ct);
-        var queryBuilder = new QueryFilterBuilder<TaskPoint>();
 
-        foreach (var filter in request.Filters)
-        {
-            queryBuilder.AddFilter(filter.Apply());
-        }
-        var predicate = queryBuilder.Build();
-
-        var filteredTaskPoints = query.Where(predicate).ToList();
+        var filteredTaskPoints = query.Where(request.Filters).ToList();
 
         return mapper.Map<IEnumerable<ReadModel>>(filteredTaskPoints);
     }
