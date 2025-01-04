@@ -19,7 +19,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Application\Services.Abstractions\Services.Abstractions.csproj" />
     <ProjectReference Include="..\..\Application\Services.Contracts\Services.Contracts.csproj" />
     <ProjectReference Include="..\..\Application\Services.Implementations\Services.Implementations.csproj" />
     <ProjectReference Include="..\..\Infrastructure\EntityFramework\EntityFramework.csproj" />

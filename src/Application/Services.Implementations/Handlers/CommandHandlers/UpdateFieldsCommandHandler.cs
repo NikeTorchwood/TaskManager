@@ -14,7 +14,7 @@ namespace Services.Implementations.Handlers.CommandHandlers;
 /// <summary>
 /// Handler for processing the <see cref="UpdateFieldsCommand"/> to update task point fields.
 /// </summary>
-internal class UpdateFieldsCommandHandler(
+public class UpdateFieldsCommandHandler(
     IReadTaskPointsRepository readRepository,
     IWriteTaskPointsRepository writeRepository,
     IMapper mapper)

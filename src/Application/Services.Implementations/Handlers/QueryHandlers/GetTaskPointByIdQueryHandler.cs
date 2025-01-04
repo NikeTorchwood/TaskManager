@@ -14,7 +14,7 @@ namespace Services.Implementations.Handlers.QueryHandlers;
 /// This handler fetches a task point from the repository by its ID. If the task point
 /// is found, it maps it to the <see cref="ReadModel"/>; otherwise, it returns a failure result.
 /// </remarks>
-internal class GetTaskPointByIdQueryHandler(
+public class GetTaskPointByIdQueryHandler(
     IReadTaskPointsRepository repository,
     IMapper mapper)
     : IRequestHandler<GetTaskPointByIdQuery, ResultModel<ReadModel>>

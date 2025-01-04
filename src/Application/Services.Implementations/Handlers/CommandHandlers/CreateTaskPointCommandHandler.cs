@@ -12,7 +12,7 @@ namespace Services.Implementations.Handlers.CommandHandlers;
 /// <summary>
 /// Handler for processing the <see cref="CreateTaskPointCommand"/> to create a new task point.
 /// </summary>
-internal class CreateTaskPointCommandHandler(
+public class CreateTaskPointCommandHandler(
     IWriteTaskPointsRepository repository,
     IMapper mapper)
     : IRequestHandler<CreateTaskPointCommand, ResultModel<ReadModel>>

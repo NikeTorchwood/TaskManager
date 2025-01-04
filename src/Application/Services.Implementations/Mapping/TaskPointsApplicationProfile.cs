@@ -4,9 +4,9 @@ using Services.Contracts.Models;
 
 namespace Services.Implementations.Mapping;
 
-public class TaskPointersApplicationProfile : Profile
+public class TaskPointsApplicationProfile : Profile
 {
-    public TaskPointersApplicationProfile()
+    public TaskPointsApplicationProfile()
     {
         CreateMap<TaskPoint, ReadModel>()
             .ForCtorParam(

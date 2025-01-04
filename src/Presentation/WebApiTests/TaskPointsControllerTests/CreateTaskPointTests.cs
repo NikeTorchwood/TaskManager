@@ -1,9 +1,9 @@
-﻿using Newtonsoft.Json;
+﻿using System.Diagnostics;
+using Newtonsoft.Json;
 using Services.Contracts.Models;
 using System.Net;
 using System.Text;
 using WebApi.Requests;
-using WebApi.Responses;
 using Xunit;
 
 namespace WebApiTests.TaskPointsControllerTests;
@@ -38,12 +38,12 @@ public class CreateTaskPointTests : IClassFixture<TestFixture>
         response.EnsureSuccessStatusCode();
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
         var content = await response.Content.ReadAsStringAsync();
-        var result = JsonConvert.DeserializeObject<ApiResponse<ReadModel>>(content);
+        var result = JsonConvert.DeserializeObject<ResultModel<ReadModel>>(content);
 
         Assert.NotNull(result);
         Assert.True(result.Success);
-        Assert.Equal(request.Title, result.Data.Title);
-        Assert.Equal(request.Description, result.Data.Description);
+        Assert.Equal(request.Title, result.Value.Title);
+        Assert.Equal(request.Description, result.Value.Description);
     }
 
     [Fact]
@@ -65,11 +65,11 @@ public class CreateTaskPointTests : IClassFixture<TestFixture>
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         var content = await response.Content.ReadAsStringAsync();
-        var result = JsonConvert.DeserializeObject<ApiResponse<string>>(content);
+        var result = JsonConvert.DeserializeObject<ResultModel<ReadModel>>(content);
 
         Assert.NotNull(result);
         Assert.False(result.Success);
-        Assert.NotNull(result.ErrorMessage);
+        Assert.NotNull(result.Error);
     }
 
     [Fact]
@@ -91,11 +91,11 @@ public class CreateTaskPointTests : IClassFixture<TestFixture>
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         var content = await response.Content.ReadAsStringAsync();
-        var result = JsonConvert.DeserializeObject<ApiResponse<string>>(content);
+        var result = JsonConvert.DeserializeObject<ResultModel<ReadModel>>(content);
 
         Assert.NotNull(result);
         Assert.False(result.Success);
-        Assert.NotNull(result.ErrorMessage);
+        Assert.NotNull(result.Error);
     }
 
     [Fact]

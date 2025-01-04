@@ -9,7 +9,7 @@ namespace Services.Implementations.Handlers.CommandHandlers;
 /// <summary>
 /// Handler for processing the <see cref="CompleteTaskPointCommand"/>.
 /// </summary>
-internal class CompleteTaskPointCommandHandler(
+public class CompleteTaskPointCommandHandler(
     IWriteTaskPointsRepository writeRepository,
     IReadTaskPointsRepository readRepository)
     : IRequestHandler<CompleteTaskPointCommand, ResultModel<bool>>

@@ -3,12 +3,12 @@
 namespace WebApi.Extensions;
 public static class MigrationManager
 {
-    public static IHost MigrateDatabase<T>(this IHost host)
+    public static async Task<IHost> MigrateDatabase<T>(this IHost host)
         where T : DbContext
     {
         var scope = host.Services.CreateScope();
         var appContext = scope.ServiceProvider.GetService<T>();
-        appContext?.Database.Migrate();
+        await appContext?.Database.MigrateAsync();
         return host;
     }
 }

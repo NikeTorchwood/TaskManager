@@ -3,7 +3,6 @@ using Services.Contracts.Models;
 using System.Net;
 using System.Net.Http.Json;
 using WebApi.Requests;
-using WebApi.Responses;
 using Xunit;
 using static Common.Resources.ResponseErrorMessages.ErrorMessages;
 
@@ -31,8 +30,8 @@ public class MarkAsDeletedTests : IClassFixture<TestFixture>
 
         createResponse.EnsureSuccessStatusCode();
         var createdTaskString = await createResponse.Content.ReadAsStringAsync();
-        var createdTask = JsonConvert.DeserializeObject<ApiResponse<ReadModel>>(createdTaskString);
-        var createdTaskId = createdTask.Data.Id;
+        var createdTask = JsonConvert.DeserializeObject<ResultModel<ReadModel>>(createdTaskString);
+        var createdTaskId = createdTask.Value.Id;
 
         // Act
         var deleteResponse = await _client.DeleteAsync($"{_baseRequestUrl}{createdTaskId}");
@@ -56,9 +55,9 @@ public class MarkAsDeletedTests : IClassFixture<TestFixture>
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
 
         var content = await response.Content.ReadAsStringAsync();
-        var result = JsonConvert.DeserializeObject<ApiResponse<string>>(content);
+        var result = JsonConvert.DeserializeObject<ResultModel<bool>>(content);
         Assert.NotNull(result);
         Assert.False(result.Success);
-        Assert.Equal(ERROR_MESSAGE_TASK_NOT_FOUND, result.ErrorMessage);
+        Assert.Equal(ERROR_MESSAGE_TASK_NOT_FOUND, result.Error);
     }
 }

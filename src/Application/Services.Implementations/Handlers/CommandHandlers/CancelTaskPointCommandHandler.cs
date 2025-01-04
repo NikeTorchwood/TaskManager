@@ -9,7 +9,7 @@ namespace Services.Implementations.Handlers.CommandHandlers;
 /// <summary>
 /// Handler for processing the <see cref="CancelTaskPointCommand"/>.
 /// </summary>
-internal class CancelTaskPointCommandHandler(
+public class CancelTaskPointCommandHandler(
     IWriteTaskPointsRepository writeRepository,
     IReadTaskPointsRepository readRepository)
     : IRequestHandler<CancelTaskPointCommand, ResultModel<bool>>

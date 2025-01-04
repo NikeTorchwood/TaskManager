@@ -9,7 +9,7 @@ namespace Services.Implementations.Handlers.CommandHandlers;
 /// <summary>
 /// Handler for processing the <see cref="StartTaskPointCommand"/> to start a task point.
 /// </summary>
-internal class StartTaskPointCommandHandler(
+public class StartTaskPointCommandHandler(
     IWriteTaskPointsRepository writeRepository,
     IReadTaskPointsRepository readRepository)
     : IRequestHandler<StartTaskPointCommand, ResultModel<bool>>

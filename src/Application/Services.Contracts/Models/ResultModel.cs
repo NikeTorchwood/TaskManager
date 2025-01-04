@@ -1,4 +1,6 @@
-﻿namespace Services.Contracts.Models;
+﻿using System.Text.Json.Serialization;
+
+namespace Services.Contracts.Models;
 
 /// <summary>
 /// Represents a result model for operations, encapsulating success, value, and error details.
@@ -9,17 +11,27 @@ public class ResultModel<T>
     /// <summary>
     /// Gets a value indicating whether the operation was successful.
     /// </summary>
-    public bool Success { get; }
+    public bool Success { get; set; }
 
     /// <summary>
     /// Gets the value returned by the operation, if successful.
     /// </summary>
-    public T Value { get; }
+    public T Value { get; set; }
 
     /// <summary>
     /// Gets the error message if the operation failed.
     /// </summary>
-    public string Error { get; }
+    public string Error { get; set; }
+
+
+    /// <summary>
+    /// Constructor for JsonConverter
+    /// </summary>
+    [JsonConstructor]
+    private ResultModel()
+    {
+
+    }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ResultModel{T}"/> class.
@@ -27,7 +39,7 @@ public class ResultModel<T>
     /// <param name="success">Indicates whether the operation was successful.</param>
     /// <param name="error">The error message (if any).</param>
     /// <param name="value">The value returned by the operation (if any).</param>
-    private ResultModel(bool success, string? error = null, T? value = default)
+    public ResultModel(bool success, string? error = null, T? value = default)
     {
         Success = success;
         Error = error;

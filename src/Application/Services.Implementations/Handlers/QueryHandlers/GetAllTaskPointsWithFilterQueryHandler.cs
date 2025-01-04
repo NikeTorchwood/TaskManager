@@ -13,7 +13,7 @@ namespace Services.Implementations.Handlers.QueryHandlers;
 /// This handler fetches all task points from the repository and applies the provided filter
 /// to return the filtered result set as a list of <see cref="ReadModel"/>.
 /// </remarks>
-internal class GetAllTaskPointsWithFilterQueryHandler(
+public class GetAllTaskPointsWithFilterQueryHandler(
     IReadTaskPointsRepository taskPointsRepository,
     IMapper mapper)
     : IRequestHandler<GetAllTaskPointsWithFilterQuery, IEnumerable<ReadModel>>

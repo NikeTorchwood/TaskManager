@@ -3,15 +3,16 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Repositories.Abstractions;
 using Repositories.Implementations;
-using Services.Abstractions;
-using Services.Implementations;
+using Services.Implementations.Handlers.QueryHandlers;
+using Services.Implementations.Mapping;
 using WebApi.Extensions;
+using WebApi.Mapping;
 
 namespace WebApi;
 
 public class Program
 {
-    public static void Main(string[] args)
+    public static async Task Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
         var services = builder.Services;
@@ -25,13 +26,16 @@ public class Program
                 configuration.GetConnectionString(nameof(TaskPointsDbContext)),
                 options => options.MigrationsAssembly(typeof(TaskPointsDbContext).Assembly)));
 
-        services.AddScoped<ITaskPointsService, TaskPointsService>();
         services.AddScoped<IReadTaskPointsRepository, TaskPointsRepository>();
         services.AddScoped<IWriteTaskPointsRepository, TaskPointsRepository>();
 
-        services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-        services.AddMediatR(
-            cfg => cfg.RegisterServicesFromAssemblies(AppDomain.CurrentDomain.GetAssemblies()));
+        services.AddAutoMapper(cfg =>
+        {
+            cfg.AddProfile<TaskPointsApplicationProfile>();
+            cfg.AddProfile<TaskPointsPresentationProfile>();
+        });
+
+        services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(typeof(GetAllTaskPointsWithFilterQueryHandler).Assembly));
 
         builder.Services.AddControllers();
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -65,8 +69,8 @@ public class Program
 
         app.MapControllers();
 
-        app.MigrateDatabase<TaskPointsDbContext>();
+        await app.MigrateDatabase<TaskPointsDbContext>();
 
-        app.Run();
+        await app.RunAsync();
     }
 }

@@ -1,7 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Services.Contracts.Models;
 using System.Net;
-using WebApi.Responses;
 using WebApiTests.TaskPointsControllerTests;
 using Xunit;
 using static Common.Resources.ResponseErrorMessages.ErrorMessages;
@@ -32,12 +31,12 @@ public class GetTaskPointByIdTests : IClassFixture<TestFixture>
         // Assert
         response.EnsureSuccessStatusCode();
         var content = await response.Content.ReadAsStringAsync();
-        var result = JsonConvert.DeserializeObject<ApiResponse<ReadModel>>(content);
+        var result = JsonConvert.DeserializeObject<ResultModel<ReadModel>>(content);
 
         Assert.NotNull(result);
         Assert.True(result.Success);
-        Assert.NotNull(result.Data);
-        Assert.Equal(existingId, result.Data.Id.ToString());
+        Assert.NotNull(result.Value);
+        Assert.Equal(existingId, result.Value.Id.ToString());
     }
 
     [Fact]
@@ -53,11 +52,11 @@ public class GetTaskPointByIdTests : IClassFixture<TestFixture>
         // Assert
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         var content = await response.Content.ReadAsStringAsync();
-        var result = JsonConvert.DeserializeObject<ApiResponse<string>>(content);
+        var result = JsonConvert.DeserializeObject<ResultModel<ReadModel>>(content);
 
         Assert.NotNull(result);
         Assert.False(result.Success);
-        Assert.Equal(ERROR_MESSAGE_TASK_NOT_FOUND, result.ErrorMessage);
+        Assert.Equal(ERROR_MESSAGE_TASK_NOT_FOUND, result.Error);
     }
 
     [Fact]

@@ -1,36 +1,38 @@
 ﻿using AutoMapper;
 using Domain.Entities;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Services.Abstractions;
+using QueryFilterBuilder;
 using Services.Contracts.Commands;
 using Services.Contracts.Filters;
 using Services.Contracts.Models;
+using Services.Contracts.Queries;
 using WebApi.Requests;
-using WebApi.Responses;
 using static Common.Resources.ResponseErrorMessages.ErrorMessages;
 
 namespace WebApi.Controllers;
 
 [ApiController, Route("api/v1/[controller]")]
 public class TaskPointsController(
-    ITaskPointsService service,
+    IMediator mediator,
     IMapper mapper) : ControllerBase
 {
-    [HttpGet("{id:guid}"), ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<ReadModel>)),
-     ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ApiResponse<string>))]
+    [HttpGet("{id:guid}"), ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResultModel<ReadModel>)),
+     ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ResultModel<ReadModel>))]
     public async Task<IActionResult> GetTaskPointById(
         Guid id,
         CancellationToken ct)
     {
-        var result = await service.GetTaskPointByIdAsync(id, ct);
+        var query = new GetTaskPointByIdQuery(id);
+        var result = await mediator.Send(query, ct);
 
         if (!result.Success)
-            return NotFound(new ApiResponse<string>(result.Error));
+            return NotFound(result);
 
-        return Ok(new ApiResponse<ReadModel>(result.Value));
+        return Ok(result);
     }
 
-    [HttpGet, ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<ReadModel>))]
+    [HttpGet, ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<ReadModel>))]
     public async Task<IActionResult> GetAllWithFilters(
         [FromQuery] TaskPointFilterRequest request,
         CancellationToken ct)
@@ -48,88 +50,99 @@ public class TaskPointsController(
         if (request.TaskPointStatus is not null)
             filters.Add(new StatusFilter(request.TaskPointStatus));
 
-        var filterModel = new FilterModel(filters);
-        var taskPoints = await service.GetAllTaskPointsWithFilterAsync(filterModel, ct);
-        return Ok(new ApiResponse<IEnumerable<ReadModel>>(taskPoints));
+        var queryBuilder = new QueryFilterBuilder<TaskPoint>();
+
+        foreach (var filter in filters)
+        {
+            queryBuilder.AddFilter(filter.Apply());
+        }
+        var predicate = queryBuilder.Build();
+
+        var query = new GetAllTaskPointsWithFilterQuery(predicate);
+
+        var taskPoints = await mediator.Send(query, ct);
+        return Ok(taskPoints);
     }
 
-    [HttpPost, ProducesResponseType(StatusCodes.Status201Created, Type = typeof(ApiResponse<ReadModel>)),
-     ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ApiResponse<string>))]
+    [HttpPost, ProducesResponseType(StatusCodes.Status201Created, Type = typeof(ResultModel<ReadModel>)),
+     ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ResultModel<ReadModel>))]
     public async Task<IActionResult> CreateTaskPoint(
         [FromBody] CreatingTaskPointRequest request,
         CancellationToken ct)
     {
         var command = mapper.Map<CreateTaskPointCommand>(request);
-        var createdUser = await service.CreateTaskPointAsync(command, ct);
+        var createdUser = await mediator.Send(command, ct);
 
         if (!createdUser.Success)
-            return BadRequest(new ApiResponse<string>(createdUser.Error));
+            return BadRequest(createdUser);
 
-        var result = new ApiResponse<ReadModel>(createdUser.Value);
-
-        return CreatedAtAction(nameof(GetTaskPointById), new { result.Data.Id }, result);
+        return CreatedAtAction(nameof(GetTaskPointById), new { createdUser.Value.Id }, createdUser);
     }
 
     [HttpDelete("{id:guid}"), ProducesResponseType(StatusCodes.Status204NoContent),
-     ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ApiResponse<string>))]
+     ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ResultModel<bool>))]
     public async Task<IActionResult> MarkAsDeletedTaskPoint(
         Guid id,
         CancellationToken ct)
     {
-        var result = await service.MarkAsDeletedTaskPointAsync(id, ct);
+        var command = new MarkAsDeletedCommand(id);
+        var result = await mediator.Send(command, ct);
 
         if (result.Success) return NoContent();
-        return NotFound(new ApiResponse<string>(result.Error));
+        return NotFound(result);
     }
 
     [HttpPost("{id:guid}/Cancel"), ProducesResponseType(StatusCodes.Status204NoContent),
-     ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ApiResponse<string>)),
-     ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ApiResponse<string>))]
+     ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ResultModel<bool>)),
+     ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ResultModel<bool>))]
     public async Task<IActionResult> CancelTaskPoint(
         Guid id,
         CancellationToken ct)
     {
-        var result = await service.CancelTaskPointAsync(id, ct);
+        var command = new CancelTaskPointCommand(id);
+        var result = await mediator.Send(command, ct);
 
         if (result.Success) return NoContent();
         if (result.Error == ERROR_MESSAGE_TASK_NOT_FOUND)
-            return NotFound(new ApiResponse<string>(result.Error));
-        return BadRequest(new ApiResponse<string>(result.Error));
+            return NotFound(result);
+        return BadRequest(result);
     }
 
     [HttpPost("{id:guid}/Complete"), ProducesResponseType(StatusCodes.Status204NoContent),
-     ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ApiResponse<string>)),
-     ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ApiResponse<string>))]
+     ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ResultModel<bool>)),
+     ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ResultModel<bool>))]
     public async Task<IActionResult> CompleteTaskPoint(
         Guid id,
         CancellationToken ct)
     {
-        var result = await service.CompleteTaskPointAsync(id, ct);
+        var command = new CompleteTaskPointCommand(id);
+        var result = await mediator.Send(command, ct);
 
         if (result.Success) return NoContent();
         if (result.Error == ERROR_MESSAGE_TASK_NOT_FOUND)
-            return NotFound(new ApiResponse<string>(result.Error));
-        return BadRequest(new ApiResponse<string>(result.Error));
+            return NotFound(result);
+        return BadRequest(result);
     }
 
     [HttpPost("{id:guid}/Start"), ProducesResponseType(StatusCodes.Status204NoContent),
-     ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ApiResponse<string>)),
-     ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ApiResponse<string>))]
+     ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ResultModel<bool>)),
+     ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ResultModel<bool>))]
     public async Task<IActionResult> StartTaskPoint(
         Guid id,
         CancellationToken ct)
     {
-        var result = await service.StartTaskPointAsync(id, ct);
+        var command = new StartTaskPointCommand(id);
+        var result = await mediator.Send(command, ct);
 
         if (result.Success) return NoContent();
         if (result.Error == ERROR_MESSAGE_TASK_NOT_FOUND)
-            return NotFound(new ApiResponse<string>(result.Error));
-        return BadRequest(new ApiResponse<string>(result.Error));
+            return NotFound(result);
+        return BadRequest(result);
     }
 
     [HttpPatch("{id:guid}"), ProducesResponseType(StatusCodes.Status204NoContent),
-     ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ApiResponse<string>)),
-     ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ApiResponse<string>))]
+     ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ResultModel<bool>)),
+     ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ResultModel<bool>))]
     public async Task<IActionResult> UpdateTaskPointFields(
         Guid id,
         [FromBody] UpdateFieldRequest request,
@@ -141,11 +154,11 @@ public class TaskPointsController(
             request.NewDescription,
             request.NewDeadline);
 
-        var result = await service.UpdateTaskPointFieldsAsync(command, ct);
+        var result = await mediator.Send(command, ct);
 
         if (result.Success) return NoContent();
         if (result.Error == ERROR_MESSAGE_TASK_NOT_FOUND)
-            return NotFound(new ApiResponse<string>(result.Error));
-        return BadRequest(new ApiResponse<string>(result.Error));
+            return NotFound(result);
+        return BadRequest(result);
     }
 }

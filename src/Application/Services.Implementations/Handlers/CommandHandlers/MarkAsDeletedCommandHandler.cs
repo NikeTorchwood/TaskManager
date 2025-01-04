@@ -9,7 +9,7 @@ namespace Services.Implementations.Handlers.CommandHandlers;
 /// <summary>
 /// Handler for processing the <see cref="MarkAsDeletedCommand"/> to mark a task point as deleted.
 /// </summary>
-internal class MarkAsDeletedCommandHandler(
+public class MarkAsDeletedCommandHandler(
     IWriteTaskPointsRepository writeRepository,
     IReadTaskPointsRepository readRepository)
     : IRequestHandler<MarkAsDeletedCommand, ResultModel<bool>>

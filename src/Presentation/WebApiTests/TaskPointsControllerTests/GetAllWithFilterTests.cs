@@ -2,7 +2,6 @@
 using Newtonsoft.Json;
 using Services.Contracts.Models;
 using System.Net;
-using WebApi.Responses;
 using Xunit;
 
 namespace WebApiTests.TaskPointsControllerTests;
@@ -29,11 +28,10 @@ public class GetAllWithFilterTests : IClassFixture<TestFixture>
         // Assert
         response.EnsureSuccessStatusCode();
         var content = await response.Content.ReadAsStringAsync();
-        var result = JsonConvert.DeserializeObject<ApiResponse<IEnumerable<ReadModel>>>(content);
+        var result = JsonConvert.DeserializeObject<IEnumerable<ReadModel>>(content);
 
         Assert.NotNull(result);
-        Assert.True(result.Success);
-        Assert.NotEmpty(result.Data);
+        Assert.NotEmpty(result);
     }
 
     [Fact]
@@ -49,11 +47,10 @@ public class GetAllWithFilterTests : IClassFixture<TestFixture>
         // Assert
         response.EnsureSuccessStatusCode();
         var content = await response.Content.ReadAsStringAsync();
-        var result = JsonConvert.DeserializeObject<ApiResponse<IEnumerable<ReadModel>>>(content);
+        var result = JsonConvert.DeserializeObject<IEnumerable<ReadModel>>(content);
 
         Assert.NotNull(result);
-        Assert.True(result.Success);
-        Assert.All(result.Data, taskPoint => Assert.Equal(status, taskPoint.Status));
+        Assert.All(result, taskPoint => Assert.Equal(status, taskPoint.Status));
     }
 
     [Fact]
@@ -71,11 +68,10 @@ public class GetAllWithFilterTests : IClassFixture<TestFixture>
         // Assert
         response.EnsureSuccessStatusCode();
         var content = await response.Content.ReadAsStringAsync();
-        var result = JsonConvert.DeserializeObject<ApiResponse<IEnumerable<ReadModel>>>(content);
+        var result = JsonConvert.DeserializeObject<IEnumerable<ReadModel>>(content);
 
         Assert.NotNull(result);
-        Assert.True(result.Success);
-        Assert.All(result.Data, taskPoint =>
+        Assert.All(result, taskPoint =>
         {
             Assert.Equal(status, taskPoint.Status);
             Assert.True(taskPoint.Deadline >= DateTime.Parse(deadlineStart) && taskPoint.Deadline <= DateTime.Parse(deadlineEnd));
@@ -108,10 +104,9 @@ public class GetAllWithFilterTests : IClassFixture<TestFixture>
         // Assert
         response.EnsureSuccessStatusCode();
         var content = await response.Content.ReadAsStringAsync();
-        var result = JsonConvert.DeserializeObject<ApiResponse<IEnumerable<ReadModel>>>(content);
+        var result = JsonConvert.DeserializeObject<IEnumerable<ReadModel>>(content);
 
         Assert.NotNull(result);
-        Assert.True(result.Success);
-        Assert.Empty(result.Data);
+        Assert.Empty(result);
     }
 }

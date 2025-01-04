@@ -3,7 +3,6 @@ using Services.Contracts.Models;
 using System.Net;
 using System.Net.Http.Json;
 using WebApi.Requests;
-using WebApi.Responses;
 using Xunit;
 using static Common.Resources.ResponseErrorMessages.ErrorMessages;
 
@@ -30,8 +29,8 @@ public class CancelTaskPointTests : IClassFixture<TestFixture>
 
         createResponse.EnsureSuccessStatusCode();
         var createdTaskString = await createResponse.Content.ReadAsStringAsync();
-        var createdTask = JsonConvert.DeserializeObject<ApiResponse<ReadModel>>(createdTaskString);
-        var createdTaskId = createdTask.Data.Id;
+        var createdTask = JsonConvert.DeserializeObject<ResultModel<ReadModel>>(createdTaskString);
+        var createdTaskId = createdTask.Value.Id;
 
         // Act
         var cancelResponse = await _client.PostAsync($"{_baseRequestUrl}{createdTaskId}/Cancel", null);
@@ -55,10 +54,10 @@ public class CancelTaskPointTests : IClassFixture<TestFixture>
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
 
         var content = await response.Content.ReadAsStringAsync();
-        var result = JsonConvert.DeserializeObject<ApiResponse<string>>(content);
+        var result = JsonConvert.DeserializeObject<ResultModel<bool>>(content);
         Assert.NotNull(result);
         Assert.False(result.Success);
-        Assert.Equal(ERROR_MESSAGE_TASK_NOT_FOUND, result.ErrorMessage);
+        Assert.Equal(ERROR_MESSAGE_TASK_NOT_FOUND, result.Error);
     }
 
     [Fact]
@@ -73,9 +72,9 @@ public class CancelTaskPointTests : IClassFixture<TestFixture>
 
         createResponse.EnsureSuccessStatusCode();
         var createdTaskString = await createResponse.Content.ReadAsStringAsync();
-        var createdTask = JsonConvert.DeserializeObject<ApiResponse<ReadModel>>(createdTaskString);
-        var createdTaskId = createdTask.Data.Id;
-        var cancelResponse = await _client.PostAsync($"{_baseRequestUrl}{createdTaskId}/Cancel", null);
+        var createdTask = JsonConvert.DeserializeObject<ResultModel<ReadModel>>(createdTaskString);
+        var createdTaskId = createdTask.Value.Id;
+        await _client.PostAsync($"{_baseRequestUrl}{createdTaskId}/Cancel", null);
 
         // Act
         var response = await _client.PostAsync($"{_baseRequestUrl}{createdTaskId}/Cancel", null);
@@ -84,9 +83,9 @@ public class CancelTaskPointTests : IClassFixture<TestFixture>
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 
         var content = await response.Content.ReadAsStringAsync();
-        var result = JsonConvert.DeserializeObject<ApiResponse<string>>(content);
+        var result = JsonConvert.DeserializeObject<ResultModel<bool>>(content);
         Assert.NotNull(result);
         Assert.False(result.Success);
-        Assert.Equal(ERROR_MESSAGE_TASK_ALREADY_CLOSED, result.ErrorMessage);
+        Assert.Equal(ERROR_MESSAGE_TASK_ALREADY_CLOSED, result.Error);
     }
 }

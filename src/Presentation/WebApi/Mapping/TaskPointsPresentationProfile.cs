@@ -3,9 +3,9 @@ using Services.Contracts.Commands;
 using WebApi.Requests;
 
 namespace WebApi.Mapping;
-public class TaskPointersPresentationProfile : Profile
+public class TaskPointsPresentationProfile : Profile
 {
-    public TaskPointersPresentationProfile()
+    public TaskPointsPresentationProfile()
     {
         CreateMap<CreatingTaskPointRequest, CreateTaskPointCommand>()
             .ForCtorParam(
