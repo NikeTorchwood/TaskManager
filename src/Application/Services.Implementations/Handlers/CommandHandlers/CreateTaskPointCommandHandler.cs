@@ -9,11 +9,20 @@ using static Common.Resources.ResponseErrorMessages.ErrorMessages;
 
 namespace Services.Implementations.Handlers.CommandHandlers;
 
+/// <summary>
+/// Handler for processing the <see cref="CreateTaskPointCommand"/> to create a new task point.
+/// </summary>
 internal class CreateTaskPointCommandHandler(
     IWriteTaskPointsRepository repository,
     IMapper mapper)
     : IRequestHandler<CreateTaskPointCommand, ResultModel<ReadModel>>
 {
+    /// <summary>
+    /// Handles the <see cref="CreateTaskPointCommand"/> to create a new task point.
+    /// </summary>
+    /// <param name="request">The command request containing the details of the task point to be created.</param>
+    /// <param name="ct">A cancellation token for the operation.</param>
+    /// <returns>A result model containing the created task point or an error message if invalid data is provided.</returns>
     public async Task<ResultModel<ReadModel>> Handle(
         CreateTaskPointCommand request,
         CancellationToken ct)

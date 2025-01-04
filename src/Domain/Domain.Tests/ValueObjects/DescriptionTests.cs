@@ -6,101 +6,48 @@ using static Common.Resources.Constants.DescriptionConstants;
 namespace Domain.Tests.ValueObjects;
 public class DescriptionTests
 {
-    private readonly string _defaultDescription;
-    private readonly string _nullableDescription;
-    private readonly string _emptyDescription;
-    private readonly string _whiteSpacesDescription;
-    private readonly string _lessThanMinLengthDescription;
-    private readonly string _biggerThanMaxLengthDescription;
+    private readonly string _defaultDescription = "Default Description";
+    private static readonly string _nullableDescription = null;
+    private static readonly string _emptyDescription = string.Empty;
+    private static readonly string _whiteSpacesDescription = new(' ', DESCRIPTION_MIN_LENGTH + 1);
+    private static readonly string _lessThanMinLengthDescription = new('x', DESCRIPTION_MIN_LENGTH - 1);
+    private static readonly string _biggerThanMaxLengthDescription = new('x', DESCRIPTION_MAX_LENGTH + 1);
 
-    public DescriptionTests()
-    {
-        _defaultDescription = "Default Title";
-        _nullableDescription = null;
-        _emptyDescription = string.Empty;
-        _whiteSpacesDescription = "      ";
-        _lessThanMinLengthDescription = new string('x', DESCRIPTION_MIN_LENGTH - 1);
-        _biggerThanMaxLengthDescription = new string('x', DESCRIPTION_MAX_LENGTH + 1);
-    }
+    public static IEnumerable<object[]> InvalidDescriptionData =>
+        new List<object[]>
+        {
+            new object[]{_nullableDescription, typeof(DescriptionEmptyException)},
+            new object[]{_emptyDescription, typeof(DescriptionEmptyException)},
+            new object[]{_whiteSpacesDescription, typeof(DescriptionEmptyException)},
+            new object[]{_lessThanMinLengthDescription, typeof(DescriptionMinLengthException)},
+            new object[]{_biggerThanMaxLengthDescription, typeof(DescriptionMaxLengthException)}
+        };
 
     [Fact]
-    public void Constructor_WhenIsValidDescription_ShouldCreatingDescription()
+    public void Constructor_ValidParameters_ShouldCreateDescription()
     {
         // Arrange
-        var expectedTitle = _defaultDescription;
+        var expected = _defaultDescription;
 
         // Act
-        var actual = new Description(expectedTitle);
+        var actual = new Description(expected);
 
         // Assert
         Assert.NotNull(actual);
         Assert.NotNull(actual.Value);
-        Assert.Equal(expectedTitle, actual.Value);
+        Assert.Equal(expected, actual.Value);
     }
 
-    [Fact]
-    public void Constructor_WhenDescriptionIsNull_ShouldThrowDescriptionEmptyException()
+    [Theory, MemberData(nameof(InvalidDescriptionData))]
+    public void Constructor_InvalidParameters_ShouldThrowExpectedException(string description, Type expectedException)
     {
         // Arrange
-        var expectedTitle = _nullableDescription;
+        var expectedDescription = description;
 
         // Act
-        var actual = () => new Description(expectedTitle);
+        var actual = () => new Description(expectedDescription);
 
         // Assert
-        Assert.Throws<DescriptionEmptyException>(actual);
+        Assert.Throws(expectedException, actual);
     }
-
-    [Fact]
-    public void Constructor_WhenDescriptionIsEmpty_ShouldThrowDescriptionEmptyException()
-    {
-        // Arrange
-        var expectedTitle = _emptyDescription;
-
-        // Act
-        var actual = () => new Description(expectedTitle);
-
-        // Assert
-        Assert.Throws<DescriptionEmptyException>(actual);
-    }
-
-    [Fact]
-    public void Constructor_WhenDescriptionIsWhiteSpaces_ShouldThrowDescriptionEmptyException()
-    {
-        // Arrange
-        var expectedTitle = _whiteSpacesDescription;
-
-        // Act
-        var actual = () => new Description(expectedTitle);
-
-        // Assert
-        Assert.Throws<DescriptionEmptyException>(actual);
-    }
-
-    [Fact]
-    public void Constructor_WhenDescriptionLengthIsLessThanMinLengthDescription_ShouldDescriptionMinLengthException()
-    {
-        // Arrange
-        var expectedTitle = _lessThanMinLengthDescription;
-
-        // Act
-        var actual = () => new Description(expectedTitle);
-
-        // Assert
-        Assert.Throws<DescriptionMinLengthException>(actual);
-    }
-
-    [Fact]
-    public void Constructor_WhenDescriptionLengthIsBiggerThanMaxLengthDescription_ShouldDescriptionMaxLengthException()
-    {
-        // Arrange
-        var expectedTitle = _biggerThanMaxLengthDescription;
-
-        // Act
-        var actual = () => new Description(expectedTitle);
-
-        // Assert
-        Assert.Throws<DescriptionMaxLengthException>(actual);
-    }
-
 }

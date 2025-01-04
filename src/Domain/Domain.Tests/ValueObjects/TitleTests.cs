@@ -7,100 +7,48 @@ namespace Domain.Tests.ValueObjects;
 
 public class TitleTests
 {
-    private readonly string _defaultTitle;
-    private readonly string _nullableTitle;
-    private readonly string _emptyTitle;
-    private readonly string _whiteSpacesTitle;
-    private readonly string _lessThanMinLengthTitle;
-    private readonly string _biggerThanMaxLengthTitle;
+    private readonly string _defaultTitle = "Default Title";
+    private static readonly string _nullableTitle = null;
+    private static readonly string _emptyTitle = string.Empty;
+    private static readonly string _whiteSpacesTitle = new(' ', TITLE_MIN_LENGTH + 1);
+    private static readonly string _lessThanMinLengthTitle = new('x', TITLE_MIN_LENGTH - 1);
+    private static readonly string _biggerThanMaxLengthTitle = new('x', TITLE_MAX_LENGTH + 1);
 
-    public TitleTests()
-    {
-        _defaultTitle = "Default Title";
-        _nullableTitle = null;
-        _emptyTitle = string.Empty;
-        _whiteSpacesTitle = "      ";
-        _lessThanMinLengthTitle = new string('x', TITLE_MIN_LENGTH - 1);
-        _biggerThanMaxLengthTitle = new string('x', TITLE_MAX_LENGTH + 1);
-    }
+    public static IEnumerable<object[]> InvalidDescriptionData =>
+        new List<object[]>
+        {
+            new object[]{_nullableTitle, typeof(TitleEmptyException)},
+            new object[]{_emptyTitle, typeof(TitleEmptyException) },
+            new object[]{_whiteSpacesTitle, typeof(TitleEmptyException) },
+            new object[]{_lessThanMinLengthTitle, typeof(TitleMinLengthException)},
+            new object[]{_biggerThanMaxLengthTitle, typeof(TitleMaxLengthException)}
+        };
 
     [Fact]
-    public void Constructor_WhenIsValidTitle_ShouldCreatingTitle()
+    public void Constructor_ValidParameters_ShouldCreateTitle()
     {
         // Arrange
-        var expectedTitle = _defaultTitle;
+        var expected = _defaultTitle;
 
         // Act
-        var actual = new Title(expectedTitle);
+        var actual = new Title(expected);
 
         // Assert
         Assert.NotNull(actual);
         Assert.NotNull(actual.Value);
-        Assert.Equal(expectedTitle, actual.Value);
+        Assert.Equal(expected, actual.Value);
     }
 
-    [Fact]
-    public void Constructor_WhenTitleIsNull_ShouldThrowTitleEmptyException()
+    [Theory, MemberData(nameof(InvalidDescriptionData))]
+    public void Constructor_InvalidParameters_ShouldThrowExpectedException(string title, Type expectedException)
     {
         // Arrange
-        var expectedTitle = _nullableTitle;
+        var expectedTitle = title;
 
         // Act
         var actual = () => new Title(expectedTitle);
 
         // Assert
-        Assert.Throws<TitleEmptyException>(actual);
-    }
-
-    [Fact]
-    public void Constructor_WhenTitleIsEmpty_ShouldThrowTitleEmptyException()
-    {
-        // Arrange
-        var expectedTitle = _emptyTitle;
-
-        // Act
-        var actual = () => new Title(expectedTitle);
-
-        // Assert
-        Assert.Throws<TitleEmptyException>(actual);
-    }
-
-    [Fact]
-    public void Constructor_WhenTitleIsWhiteSpaces_ShouldThrowTitleEmptyException()
-    {
-        // Arrange
-        var expectedTitle = _whiteSpacesTitle;
-
-        // Act
-        var actual = () => new Title(expectedTitle);
-
-        // Assert
-        Assert.Throws<TitleEmptyException>(actual);
-    }
-
-    [Fact]
-    public void Constructor_WhenTitleLengthIsLessThanMinLengthTitle_ShouldTitleMinLengthException()
-    {
-        // Arrange
-        var expectedTitle = _lessThanMinLengthTitle;
-
-        // Act
-        var actual = () => new Title(expectedTitle);
-
-        // Assert
-        Assert.Throws<TitleMinLengthException>(actual);
-    }
-
-    [Fact]
-    public void Constructor_WhenTitleLengthIsBiggerThanMaxLengthTitle_ShouldTitleMaxLengthException()
-    {
-        // Arrange
-        var expectedTitle = _biggerThanMaxLengthTitle;
-
-        // Act
-        var actual = () => new Title(expectedTitle);
-
-        // Assert
-        Assert.Throws<TitleMaxLengthException>(actual);
+        Assert.Throws(expectedException, actual);
     }
 }

@@ -5,4 +5,12 @@ using System.Linq.Expressions;
 
 namespace Services.Contracts.Queries;
 
-public record GetAllTaskPointsWithFilterQuery(Expression<Func<TaskPoint, bool>> Filters) : IRequest<IEnumerable<ReadModel>>;
+/// <summary>
+/// Query for retrieving all <see cref="TaskPoint"/> entities that match the specified filters.
+/// </summary>
+/// <param name="Filters">
+/// An expression defining the filtering logic to be applied to <see cref="TaskPoint"/> entities.
+/// </param>
+public record GetAllTaskPointsWithFilterQuery(
+    Expression<Func<TaskPoint, bool>> Filters)
+    : IRequest<IEnumerable<ReadModel>>;
