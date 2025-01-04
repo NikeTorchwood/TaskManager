@@ -29,9 +29,10 @@ public class CreateTaskPointCommandHandler(
     {
         if (request == null ||
             string.IsNullOrWhiteSpace(request.Title) ||
-            string.IsNullOrWhiteSpace(request.Description) ||
-            request.Deadline <= DateTime.UtcNow)
+            string.IsNullOrWhiteSpace(request.Description))
             return ResultModel<ReadModel>.FailureResult(ERROR_MESSAGE_INVALID_DATA);
+        if (request.Deadline <= DateTime.UtcNow)
+            return ResultModel<ReadModel>.FailureResult(ERROR_MESSAGE_DEADLINE_MUST_BE_IN_FUTURE);
 
         var title = new Title(request.Title);
         var description = new Description(request.Description);

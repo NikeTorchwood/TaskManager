@@ -37,6 +37,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QueryFilterBuilder", "src\I
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApiTests", "src\Presentation\WebApiTests\WebApiTests.csproj", "{4249900E-FB7A-47D2-ABDB-1B14736EF30A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Services.Implementations.Tests", "src\Application\Services.Implementations.Tests\Services.Implementations.Tests.csproj", "{4E5E4896-E917-468B-9E44-D0C39F88D6EA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -91,6 +93,10 @@ Global
 		{4249900E-FB7A-47D2-ABDB-1B14736EF30A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4249900E-FB7A-47D2-ABDB-1B14736EF30A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4249900E-FB7A-47D2-ABDB-1B14736EF30A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4E5E4896-E917-468B-9E44-D0C39F88D6EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4E5E4896-E917-468B-9E44-D0C39F88D6EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4E5E4896-E917-468B-9E44-D0C39F88D6EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4E5E4896-E917-468B-9E44-D0C39F88D6EA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -108,6 +114,7 @@ Global
 		{3B8A7BCE-F783-4EB7-9F0A-C8568AA791E6} = {B076333A-DFA2-4497-B0F6-F835F5465A22}
 		{FC29AC47-7808-407E-834D-3FE2E124ADC5} = {EA648A4E-E132-4860-BFC1-4C1BD67F5C0E}
 		{4249900E-FB7A-47D2-ABDB-1B14736EF30A} = {8FAE446F-161A-4B74-8187-04596A821523}
+		{4E5E4896-E917-468B-9E44-D0C39F88D6EA} = {63E0F351-FD1E-4BFF-AC5A-71A6EFD21A41}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {ABCCC59F-A40C-4764-BE5A-09884DAB3C4C}
